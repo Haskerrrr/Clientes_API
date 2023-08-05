@@ -1,28 +1,23 @@
 from rest_framework import serializers
 from clientes.models import Cliente
+from clientes.validator import *
 
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
         fields = '__all__'
     
-    def validate_cpf(self, cpf): #instanciei e trouxe o CPF
-        if len(cpf) != 11: #Se o tamanho(len) do CPF for != (Não for igual)
-            raise serializers.ValidationError('O CPF deve ter 11 dígitos') #Passando o erro que irá utilizar. 
-        return cpf #Caso tenha 9 dígitos, irá retornar CPF
+    def validate(self, data):
+        if not cpf_valid(data['cpf']):
+            raise serializers.ValidationError({'cpf':'O CPF deve ter 11 dígitos'})
 
-    def validade_nome(self, nome):
-        if not name.isalpha():
-            raise serializers.ValidationError('Não inclua números nesse campo')
-        return nome
+        if not nome_valid(data['nome']):
+            raise serializers.ValidationError({'nome':'Não inclua números neste campo'})
 
-    def validate_rg(self, rg):
-        if len(rg) != 9:
-            raise serializers.ValidationError('O RG deve ter 9 dígitos')
-        return rg 
+        if not rg_valid(data['rg']):
+            raise serializers.ValidationError({'rg':'O RG deve ter 9 dígitos'})
 
-    def validate_celular(self, celular):
-        if len(celular) < 11:
-            raise serializers.ValidationError('O celular deve ter 11 dígitos')
-        return celular
-    
+        if not celular_valid(data['celular']):
+            raise serializers.ValidationError({'celular':'O celular deve ter até 11 dígitos'})
+        return data    
+
