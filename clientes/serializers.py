@@ -20,4 +20,3 @@ class ClienteSerializer(serializers.ModelSerializer):
         if not celular_valid(data['celular']):
             raise serializers.ValidationError({'celular':'O celular deve seguir esse modelo: 00 0000-0000'})
         return data    
-
